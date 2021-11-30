@@ -1,0 +1,132 @@
+---
+title: "Assessing the Enzyme Latch Hypothesis in Arctic Peatlands: An Enzymatic Activity Approach"
+output: pdf_document
+header-includes:
+   \usepackage{float}
+ \floatplacement{figure}{H}
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(readxl)
+require(dplyr)
+require(tidyr)
+library(knitr)
+library(kableExtra)
+options(knitr.duplicate.label = "allow")
+Mydataset <- read_xlsx("MyDataset.xlsx")
+
+```
+
+## Introduction
+
+|       Northern Arctic peatlands store vast amounts of partially decomposed organic carbon (C), representing 28% (390 Pg of the global C stock) of the terrestrial C stock in the world that has been accumulating for millennia (Freeman et al., 2004; Frolking & Roulet, 2007). This accumulation of organic C in peat soils is the result of the peculiar characteristics of this ecosystem that cause higher rates of production than decomposition (Dunn & Freeman, 2018). Arctic peatlands can be categorized as palsa, bog and fen. As illustrated in Figure 1, palsa soils are rich in permafrost, which is defined as ground that has been frozen for more than two consecutive years, and these freezing soil conditions limit microbial activity and decomposition (Koven et al., 2011; Swindles et al., 2015). Moving along the permafrost thaw gradient, bog soils have a thinner permafrost layer and a wider active layer, which thaws and refreezes every summer-winter period, and these soils are partially anoxic due to the presence of surface water from precipitation (Beilman et al., 2001). These anoxic conditions are more prevalent in fen due to its saturated soil conditions. Peatlands are critical in the global C cycle due to their role in C sequestration and storing (Romanowicz et al., 2015; Yu, 2012). Nonetheless, permafrost is thawing at an accelerated rate due to global warming and increased snowfall, which results in more organic matter becoming available for microbes to decompose (Olefeldt & Roulet, 2012). This results in the release of methane and carbon dioxide (Frolking & Roulet, 2007; Treat et al., 2016), which could imply a change in peatlands’ C accumulation to become sources of greenhouse gases to the atmosphere, and alter global C fluxes if the Arctic temperatures continue to increase (Freeman et al., 2004; Minayeva et al., 2017).
+
+![describe ](peat.png)
+
+|       Soil organic decomposition is carried out by microbial organisms that release enzymes into the soil matrix that break down large organic macromolecules and convert them into simpler molecules available to be assimilated by plants and microbes. Hydrolytic enzymes play an important role in the depolymerization of large polysaccharides to mineralize nitrogen and phosphorus, which are not oxygen-dependent (Urbanová & Hájek, 2021). On the other hand, oxidative enzymes (O2-dependent), such as phenol oxidases, are responsible for the decomposition of phenolic compounds that are produced by plants as secondary metabolites, e.g. flavonoids and tannins, which are commonly found in soil detritus (Dunn & Freeman, 2018). 
+
+|       Low decomposition rates in Arctic peatlands are often attributed to the anoxic conditions that limit phenol oxidase activity. This statement has been defined as the “enzyme latch hypothesis” that proposes that peatland anoxia suppresses phenol oxidases, resulting in the accumulation of phenolics in soils, which are thought to be inhibitors of hydrolase activity. Thus, both oxidative and hydrolytic activities are constrained by phenols in anaerobic peat soils, reducing decomposition rates and increasing organic matter accumulation  (Hall et al., 2014). 
+
+![describe ](enzyme.png)
+
+|       Despite the broadly acceptance of the enzyme latch hypothesis, there is not enough solid supporting evidence, and the low enzyme activity rates can be explained by other factors, such as low microbial biomass, seasonal changes in soil temperature, and wetland type (Urbanová & Hájek, 2021). This study aims to examine the enzyme latch hypothesis along the thaw gradient (palsa, bog, fen) in Arctic peatland from Sweden through the analysis of oxidative and hydrolytic enzyme activities. 
+
+
+## Methods
+
+```{r, echo=FALSE,message=FALSE,warning=FALSE}
+weight_moisture <- Mydataset %>%
+  filter(!is.na(Dry_weight & moisture)) %>%
+  group_by(Site) %>%
+  summarize(mean_weight = mean(Dry_weight), mean_moisture = mean(moisture))
+
+table_kable <- kable(x = head(weight_moisture),
+      col.names = c("Site", "Dry Weight", "Moisture"),
+      caption = "tbd")%>%
+      kable_classic_2(full_width = F)%>%
+      kable_styling(latex_options = "HOLD_position")
+
+table_kable
+
+```
+
+## Results
+
+```{r, echo=FALSE,message=FALSE,warning=FALSE, fig.show="hold", out.width="50%"}
+
+data_long <- gather(Mydataset,enzyme,activity,ARYL:Phen_ox,factor_key=TRUE)
+
+data_positive <- data_long                     
+data_positive[data_positive < 0] <- 0   
+
+data_positive$Site <- factor(data_positive$Site,levels = c('palsa','bog','fen'))
+
+activityavg <- data_positive %>%
+  select(activity, Site) %>%
+  group_by(Site) %>%
+  summarize(mean_activity = mean(activity))
+
+
+activityplot<- ggplot(data=activityavg, aes(x=Site,y=mean_activity))+
+  geom_col(col='darkslategray4')
+activityplot
+
+depth<- ggplot(data=data_positive, aes(x=depth,y=activity,fill=Site))+
+  geom_col()
+depth
+
+
+
+```
+
+
+```{r, echo=FALSE,message=FALSE,warning=FALSE,figures-side, fig.show="hold", out.width="50%"}
+
+Aryl <- ggplot(Mydataset, aes(x = Site, y = ARYL)) +
+geom_boxplot()+
+labs(x= "", y = "nmol activity / g dry / hr") +
+  ggtitle("Aryl Sulfatase Activity")
+Aryl
+
+bg <- ggplot(Mydataset, aes(x = Site, y = BG)) +
+geom_boxplot()+
+labs(x= "", y = "nmol activity / g dry / hr") +
+  ggtitle("BG Activity")
+bg
+
+nag <- ggplot(Mydataset, aes(x = Site, y = NAG)) +
+geom_boxplot()+
+labs(x= "", y = "nmol activity / g dry / hr") +
+  ggtitle("NAG Activity")
+nag
+
+phos <- ggplot(Mydataset, aes(x = Site, y = PHOS)) +
+geom_boxplot()+
+labs(x= "", y = "nmol activity / g dry / hr") +
+  ggtitle("PHOS Activity")
+phos
+
+xylo <- ggplot(Mydataset, aes(x = Site, y = XYLO)) +
+geom_boxplot()+
+labs(x= "", y = "nmol activity / g dry / hr") +
+  ggtitle("xylo Activity")
+xylo
+
+phen <- ggplot(Mydataset, aes(x = Site, y = Phen_ox)) +
+geom_boxplot()+
+labs(x= "", y = "nmol activity / g dry / hr") +
+  ggtitle("phen Activity")
+phen
+
+```
+
+
+```{r, echo=FALSE,message=FALSE,warning=FALSE}
+
+
+```
+
+## Discussion
+## References
