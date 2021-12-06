@@ -2,7 +2,7 @@
 output: pdf_document
 header-includes:
    \usepackage{float}
-   \floatplacement{figure}{H}
+   
 bibliography: references.bib
 editor_options: 
   chunk_output_type: console
@@ -195,13 +195,15 @@ phen
 ```
  Figure 5. Average enzyme activity at the three different sites and depths. 
  
-```{r, echo=FALSE,message=FALSE,warning=FALSE}
+```{r, echo=FALSE,message=FALSE,warning=FALSE, fig.height=7, eval=FALSE}
 
 combine_plots <- ggarrange(aryl, bg, nag, phos, xylo, phen, labels = c("Arylsulphatase", "β-d-glucosidase", "N-acetyl-β-d-glucosaminidase", "Phosphatase", "β-d-xylosidase", "Phenol oxidase"), font.label = list(size = 5), nrow = 3, ncol=2,  widths = 1, heights = 1, hjust = -0.5, vjust = 1.5)
 
+combine_plots
+
 annotate_figure(combine_plots,bottom = text_grob("Figure 5. Average enzyme activity at the three different sites and depths",hjust = 1, x = 1,size = 10))
 
-combine_plots
+
 
 #labs(caption = "Figure 5. Average enzyme activity at the three different sites and depths")
 ```
