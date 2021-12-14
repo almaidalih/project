@@ -39,23 +39,64 @@ Mydataset <- read_xlsx("MyDataset.xlsx")
 
 ## Methods
 
+*Sample Collection*
+
+|       27 samples were collected from Swedish  palsa, bog and fen peat soils from three cores, at 5 cm, 10 cm and 20 cm depth each. These samples were shipped to the US for analysis.
+
+*Enzyme Assays*
+
+|       Soil microbes secrete extracellular enzymes into the soil matrix. These enzymes are responsible for breaking down large macromolecules into simpler compounds that can be easily assimilated by microbes and plants. Enzymes can be broadly categorized as hydrolytic and oxidative; a description of the type of assay used is found in Table 1. This study tested five hydrolytic enzymes, i.e. $\beta$-d-glucosidase, $\beta$-d-xylosidase, N-acetyl-$\beta$-d-glucosaminidase, arylsulphatase, and phosphatase, and the oxidative enzyme phenol oxidase. All enzymatic assays were performed at the University of New Hampshire. 
+
 ```{r, echo=FALSE,message=FALSE,warning=FALSE}
 
-enzymes_info <- data.frame(name=c('Phenol oxidase','β-d-glucosidase','β-d-xylosidase','N-acetyl-β-d-glucosaminidase', 'Arylsulphatase','Phosphatase'), substrate=c("L-DOPA", "4-MUB-β-D-glucoside","4-MUB-β-D-xyloside","4-MUB-N-acetyl-β-D-glucosaminide", "4-MUB-sulfate", "4-MUB-phosphate"), efunction=c("Oxidation of benzenediols to semiquinones with O2", "Catalysis of hydrolysis of 1,4 linked β-D-glucose residues from β-D-glucosides", "Degradation of xylooligomers into xylose", "Catalysis of hydrolysis of 1,4 linked N-acetyl-β-D-glucosaminide residues in chitooligosaccharides", "Catalysis of desulfation of 3-O-sulfogalactosyl residues in glycosphingolipids", "Mineralization of organic P into phosphate"))
+assay_info <- data.frame(name=c('Hydrolytic','Oxidative'), degrade=c("e.g. cellulose", "e.g. lignin"), assay=c("Fluorimetric", "Colorimetric"), plate=c('Black',"Clear"))
 
-table_kable1 <- kable(x = head(enzymes_info),
-      col.names = c("Enzyme", "Substrate", "Function"),
-      caption = "List of enzymes tested in the study and their respective substrate and function.")%>%
+table_kable1 <- kable(x = head(assay_info),
+      col.names = c("Enzyme Type", "Degrade", "Assay",'Microplate'),
+      caption = "Summary of assay type and microplates used to perform hydrolytic and oxidative enzyme assays.")%>%
       kable_classic_2(full_width = F)%>%
-      kable_styling(latex_options = "HOLD_position")%>% 
-  kable_styling(latex_options="scale_down")
+      kable_styling(latex_options = "HOLD_position")%>% row_spec(0,bold=TRUE)
 
 table_kable1
 
 ```
 
+|       A V-max test was performed on each enzyme to calculate the optimal incubation times and substrate concentrations. This information, along with the function of the six enzymes is found in Table 2. In addition, all enzymes tested required 50 $\mu$M sodium acetate (NaOAc) buffer with pH 4-5.6, and hydrolytic enzymes required 10 $\mu$M 4-Methylumbelliferone (MUB) as standard. 
 
 ```{r, echo=FALSE,message=FALSE,warning=FALSE}
+
+enzymes_info <- data.frame(name=c('Phenol oxidase','β-d-glucosidase','β-d-xylosidase','N-acetyl-β-d-glucosaminidase', 'Arylsulphatase','Phosphatase'), substrate=c("L-DOPA", "4-MUB-β-D-glucoside","4-MUB-β-D-xyloside","4-MUB-N-acetyl-β-D-glucosaminide", "4-MUB-sulfate", "4-MUB-phosphate"), efunction=c("Oxidation of benzenediols to semiquinones with O2", "Catalysis of hydrolysis of 1,4 linked β-D-glucose residues from β-D-glucosides", "Degradation of xylooligomers into xylose", "Catalysis of hydrolysis of 1,4 linked N-acetyl-β-D-glucosaminide residues in chitooligosaccharides", "Catalysis of desulfation of 3-O-sulfogalactosyl residues in glycosphingolipids", "Mineralization of organic P into phosphate"), incubation=c('24 h','45 min','30 min','45 min','45 min','45 min'), concentration=c("400","400","400","400","400","600"))
+
+table_kable2 <- kable(x = head(enzymes_info),
+      col.names = c("Enzyme", "Substrate", "Function", "Incubation Time", "Substrate Concentration (μM)"),
+      caption = "List of enzymes tested in the study and their respective substrate, function, incubation time and substrate concentration.")%>%
+      kable_classic_2(full_width = F)%>%
+      kable_styling(latex_options = "HOLD_position")%>% 
+  kable_styling(latex_options="scale_down")%>% row_spec(0,bold=TRUE)%>%
+  column_spec(3:5, width = "10em")
+
+table_kable2
+
+```
+
+|       All soils samples were homogenized by blending 1 g of soil and 60 mL of NaOAc buffer for 30 sec, and then adding additional 65 mL of buffer. The soil slurry was kept stirring on a stir plate before being transferred. Soil slurries were pipetted into their respective wells, along with MUB and NaOAc, including the control wells. Microplates were incubated (Table 2) before being read. 
+
+|       After incubation, microplates were read in the BioTek Synergy microplate reader using Gen5 software. Hydrolytic enzymes require an excitation wavelength of 360 nm and emission of 460 nm; whereas phenol oxidase requires 450 nm. This raw data was copied to an Excel file.
+
+|       Enzyme activity was calculated as follows.
+
+For oxidative enzyme activity:
+
+$Final \ abs = Mean \ Assay \ abs - (Sample \ Control \ abs + Substrate \ Control \ abs)$
+
+
+$Final \ activity \ (\mu mol \ g^{-1}h^{-1}) = \frac{Final \ abs \ \cdot \ 125 \ mL}{Emmision \ Coefficient \ \cdot \ 0.2 \ mL \ \cdot \ h \ \cdot \ g}$
+
+For hydrolytic enzyme activity:
+
+$Final \ activity \ (\mu mol \ g^{-1}h^{-1}) = \frac{Net \ Fluorescence \cdot \ 125 \ mL}{Emission \ Coefficient \ 0.2 \ mL \ \cdot \ h \ \cdot \ g}$
+
+```{r, echo=FALSE,message=FALSE,warning=FALSE, eval=FALSE}
 weight_moisture <- Mydataset %>%
   filter(!is.na(Dry_weight & moisture)) %>%
   group_by(Site) %>%
@@ -65,7 +106,7 @@ table_kable2 <- kable(x = head(weight_moisture),
       col.names = c("Site", "Dry Weight", "Moisture"),
       caption = "Dry weight and moisture averages calculated for palsa, bog and fen peat soils.")%>%
       kable_classic_2(full_width = F)%>%
-      kable_styling(latex_options = "HOLD_position")
+      kable_styling(latex_options = "HOLD_position")%>% row_spec(0,bold=TRUE)
 
 table_kable2
 
@@ -73,7 +114,9 @@ table_kable2
 
 ## Results
 
-```{r, echo=FALSE,message=FALSE,warning=FALSE, fig.show="hold", out.width="50%"}
+|       The averaged enzyme activity per site showed highest activity for palsa and lowest for fen soils (Figure 3). Whereas surface (5 cm) samples showed highest enzyme values (Figure 4). 
+
+```{r, echo=FALSE,message=FALSE,warning=FALSE, fig.show="hold", fig.width=7, fig.height=4, fig.align='center'}
 
 
 data_long <- gather(Mydataset,enzyme,activity,ARYL:Phen_ox,factor_key=TRUE)
@@ -98,7 +141,7 @@ activityplot <- ggplot(data=activityavg, aes(x=Site,y=mean_activity))+
   labs(x="Site", y="Enzyme Activity \n (nmol/g soil/hr)")+
   theme_light()+
   labs(caption = "Figure 3. Average enzyme activity at palsa, bog and fen sites.")+
-  theme(plot.caption = element_text(face="italic", lineheight = 0.9,hjust = 0.5))+
+  theme(plot.caption = element_text(lineheight = 0.9,hjust = 0))+
   theme(axis.title = element_text(face="bold"))
 
 activityplot
@@ -109,7 +152,7 @@ depth2<- ggplot(data=activityavg2, aes(x=depth,y=mean_activity,fill=Site))+
   labs(x="Depth", y="Enzyme Activity \n (nmol/g soil/hr)")+
   theme_light()+
   labs(caption = "Figure 4. Average enzyme activity at the three different depths.")+
-  theme(plot.caption = element_text(face="italic", lineheight = 0.9,hjust = 0.5))+
+  theme(plot.caption = element_text(lineheight = 0.9,hjust = 0))+
   theme(axis.title = element_text(face="bold"))
 depth2
 
@@ -117,6 +160,7 @@ depth2
 
 ```
 
+|       When evaluating the activity of individual enzymes, most enzymes showed values below 10,000 nmol/g/h in all soil sites. Nonetheless, phosphatase had values above 30,000 nmol/g/h for depth palsa. In addition, phenol oxidase activity was below 1.5 nmol/g/h (Figure 5).
 
 ```{r, echo=FALSE,message=FALSE,warning=FALSE, fig.show="hold", out.width="50%"}
 
