@@ -259,4 +259,9 @@ annotate_figure(combine_plots,bottom = text_grob("Figure 5. Average enzyme activ
 ```
 
 ## Discussion
+
+|       The enzyme hypothesis proposes that under high anoxic conditions, enzyme activity is constrained due to the accumulation of phenolics that inhibit hydrolytic activity. When calculating the enzyme activity mean at each site, the high palsa values and lower fen values initially supported the enzyme latch hypothesis. Nonetheless, after calculating the enzyme activity individually for the six enzymes at the three sites (Figure 5), the plots showed that palsa had the lowest values for all enzymes except phosphatase. These high phosphatase values caused the activity average observed in Figure 3 to show the highest values for  palsa. However, these high phosphatase values are attributed to errors during sample preparation, and phosphatase samples will be carefully prepared again.
+
+|       After evaluating the enzyme activity for each enzyme, the results contradict the enzyme latch hypothesis, which may indicate that phenolics do not entirely inhibit hydrolytic enzymes in peat soils. Further studies from different approaches (e.g. metabolomics) are needed to broaden our understanding of decomposition, microbial activity and the role of phenolics in Arctic peatlands.  
+
 ## References
